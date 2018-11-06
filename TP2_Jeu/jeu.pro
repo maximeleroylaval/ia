@@ -169,7 +169,7 @@ ai_input(Y) :-
    user_word(U),
    user_find(F),
    (
-       setof([W,R], (dictionnary(W), check_dictionnary(W, F, U, R)), L),
+       findall([W,R], (dictionnary(W), check_dictionnary(W, F, U, R)), L),
        length(L, I),
        I > 0,
        choose_best_word(L, O),
@@ -182,6 +182,15 @@ ai_input(Y) :-
 check_end(N) :-
    X is 7, X > N.
 
+% Get input depending if it is AI or Human playing
+get_input(AI, S) :-
+   (
+    AI is 0,
+    player_input(S)
+    ;
+    ai_input(S)
+), !.
+
 % Main loop of the game
 % Display life, letters typed, and ask for an input
 % It then checks whether or not the letter is contained in the answer
@@ -191,12 +200,7 @@ game_loop(N, T, G, AI) :-
    write('typed: '), user_word(L), writeln(L),
    check_end(N),
    writeln('please type a character'),
-   (
-       AI is 0,
-       player_input(S)
-       ;
-       ai_input(S)
-   ),
+   get_input(AI, S),
    add_char(S),
    compare,
    add_value_target(T, T1, G, G1),
