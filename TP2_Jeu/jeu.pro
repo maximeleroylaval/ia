@@ -160,9 +160,9 @@ check_letter(U, O, W) :-
 
 % Choose best letter according to their weigth
 choose_best_letter(U, O, Y) :-
-   bagof(V, (letter(X, V), check_letter(U, X, O)), L),
+   findall(V, (letter(X, V), check_letter(U, X, O)), L),
    get_max(L, I),
-   letter(Y, I), !.
+   letter(Y, I).
 
 % Read AI input
 ai_input(Y) :-
@@ -170,9 +170,8 @@ ai_input(Y) :-
    user_find(F),
    (
        setof([W,R], (dictionnary(W), check_dictionnary(W, F, U, R)), L),
-       writeln(L),
        length(L, I),
-       I < 0,
+       I > 0,
        choose_best_word(L, O),
        choose_best_letter(U, O, Y)
        ;
