@@ -5,26 +5,26 @@
    op( 300, xfy, ou ),
    op( 200, xfy, et ).
 
+% Définition du prédicat fait/1 comme étant dynamique
 :-
    dynamic(fait/1).
 
-% données du problème : fait( X ) - à  ajouter
-
-% Règles de la base de connaissances : si ... alors ... - à ajouter
-si distance alors tireur.
-si magie ou sort alors mage.
-si resistance ou melee alors tank.
-si tireur et glace ou reine alors ashe.
-si tireur et feu ou reine alors caitlyn.
-si tireur et eau ou rat alors twitch.
-si tireur et pistolet ou pirate alors mf.
-si mage et feu ou elementaire alors brand.
-si mage et glace ou pheonix alors anivia.
-si mage et eau ou rat alors fizz.
-si mage et pistolet ou artiste alors jhin.
-si tank et rocher ou elementaire alors malphite.
-si tank et glace ou artiste alors mundo.
-si tank et pistolet ou pirate alors gankplang.
+% Règles de la base de connaissances : si ... alors ...
+si style(distance) alors role(tireur).
+si style(sort) alors role(mage).
+si style(melee) alors role(combattant).
+si role(tireur) et element(glace) ou alt(reine) alors champion(ashe).
+si role(tireur) et element(air) ou alt(sherif) alors champion(caitlyn).
+si role(tireur) et element(poison) ou alt(monstre) alors champion(twitch).
+si role(tireur) et element(feu) ou alt(pirate) alors champion(mf).
+si role(mage) et element(feu) ou alt(elementaire) alors champion(brand).
+si role(mage) et element(glace) ou alt(elementaire) alors champion(anivia).
+si role(mage) et element(eau) ou alt(monstre) alors champion(fizz).
+si role(mage) et element(feu) ou alt(artiste) alors champion(jhin).
+si role(combattant) et element(terre) ou alt(elementaire) alors champion(malphite).
+si role(combattant) et element(glace) ou alt(artiste) alors champion(mundo).
+si role(combattant) et element(feu) ou alt(pirate) alors champion(gankplang).
+si role(combattant) et element(eau) ou alt(sherrif) alors champion(vi).
 
 % ch_arriere/1 : moteur d inference fonctionnant en chainage arriere
 ch_arriere( But ) :-
@@ -59,10 +59,16 @@ recherche_fait( Cond1 et Cond2 ) :-
 recherche_fait( Cond1 ou Cond2 ) :-
    recherche_fait( Cond1 ) ; recherche_fait( Cond2 ).
 
+% check_exit/1 : vérifie si l'argument est exit
+check_exit(Value) :-
+       Value = 'exit',
+       abort.
+
 % main_game/0 : boucle de jeu principale
 main_game :-
    writeln('Ajoutez un fait:'),
    read(E),
+   not(check_exit(E)),
    not(recherche_fait(E)),
    assert(fait(E)),
    ch_avant,
@@ -71,8 +77,6 @@ main_game :-
 main_game :-
    writeln('Fait déjà existant !'),
    main_game.
-
-
 
 % clear/O : vide la liste des faits
 clear :-
@@ -86,27 +90,3 @@ jouer_avec_fait:-
 play :-
    retractall(fait(_)),
    main_game.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
